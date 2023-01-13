@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const dayjs = require("dayjs");
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 
@@ -46,11 +47,11 @@ const createPost = (req, res, next) => {
     throw new HttpError("입력란을 다시 확인해주세요.", 422);
   }
 
-  const { title, content, author, createDate } = req.body;
+  const { title, author, content } = req.body;
   const createdPost = {
     id: uuidv4(),
     title,
-    createDate,
+    createDate: dayjs().format("YYYY-MM-DD"),
     author,
     content,
   };
