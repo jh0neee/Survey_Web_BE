@@ -3,6 +3,7 @@ const port = 5000;
 const bodyParser = require('body-parser');
 
 const postsRouter = require("./routes/posts-routes");
+const usersRouter = require("./routes/users-routes");
 const HttpError = require('./models/http-error');
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use('/api/posts', postsRouter);
+app.use('/api/user', usersRouter);
 
 // 지원되지 않은 routes에 대한 오류처리
 app.use((req, res, next) => {
