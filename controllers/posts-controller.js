@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 
 let DUMMY_POSTS = [
@@ -38,6 +39,13 @@ const getPostsByUserId = (req, res, next) => {
 };
 
 const createPost = (req, res, next) => {
+  // 유효성 검사
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("입력란을 다시 확인해주세요.", 422);
+  }
+
   const { title, content, author, createDate } = req.body;
   const createdPost = {
     id: uuidv4(),
@@ -53,6 +61,13 @@ const createPost = (req, res, next) => {
 };
 
 const updatePost = (req, res, next) => {
+  // 유효성 검사
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("입력란을 다시 확인해주세요.", 422);
+  }
+
   const { title, content } = req.body;
   const postId = req.params.pid;
 
@@ -70,8 +85,13 @@ const updatePost = (req, res, next) => {
 
 const deletePost = (req, res, next) => {
   const postId = req.params.pid;
-  DUMMY_POSTS = DUMMY_POSTS.filter((p) => p.id !== postId);
+  const deletedPost = DUMMY_POSTS.filter((p) => p.id !== postId);
 
+  if (!deletedPost) {
+    throw new HttpError("해당 게시글을 찾지 못했습니다.", 404);
+  }
+
+  DUMMY_POSTS = deletedPost;
   res.status(200).json({ message: "삭제된 게시물입니다." });
 };
 

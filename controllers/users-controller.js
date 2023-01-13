@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 
 const DUMMY_USERS = [
@@ -11,6 +12,13 @@ const DUMMY_USERS = [
 ];
 
 const signup = (req, res, next) => {
+  // 유효성 검사
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    throw new HttpError("아이디와 비밀번호를 다시 확인해주세요", 422);
+  }
+
   const { name, email, password } = req.body;
 
   // 아이디 중복 여부
