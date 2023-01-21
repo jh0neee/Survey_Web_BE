@@ -11,9 +11,6 @@ router.get("/", postsControllers.getPost);
 // 게시글 id로 특정 게시글 검색
 router.get("/:pid", postsControllers.getPostById);
 
-// 사용자 id에 대한 모든 게시글 목록 검색
-router.get("/user/:uid", postsControllers.getPostsByUserId);
-
 // 새로운 게시글 생성
 router.post(
   "/",
