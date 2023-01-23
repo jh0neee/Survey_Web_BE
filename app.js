@@ -4,6 +4,7 @@ const { PORT, MONGO_URL } = process.env;
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const postsRouter = require("./routes/posts-routes");
 const usersRouter = require("./routes/users-routes");
@@ -23,6 +24,7 @@ mongoose.connection.on("connected", () => {
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.use("/api/posts", postsRouter);
 app.use("/api/user", usersRouter);
