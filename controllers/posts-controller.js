@@ -8,7 +8,7 @@ const User = require("../models/user");
 const getPost = async (req, res, next) => {
   let posts;
   try {
-    posts = await Post.find({}, 'title author createDate');
+    posts = await Post.find({}, 'title author createDate').populate('author','name');
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
@@ -25,7 +25,7 @@ const getPostById = async (req, res, next) => {
 
   let post;
   try {
-    post = await Post.find({postId} ,"title author createDate content");
+    post = await Post.find({postId} ,"title author createDate content").populate('author','name');
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
