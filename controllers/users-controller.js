@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
@@ -26,11 +27,20 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
+  // 암호 해싱
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (err) {
+    const error = new HttpError("다시 시도해주세요", 500);
+    return next(error);
+  }
+
   // 유저 생성
   const createdUser = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
     posts: [],
   });
 
@@ -59,7 +69,28 @@ const login = async (req, res, next) => {
   }
 
   // 이메일 패스워드 일치검사
-  if (!existingUser || existingUser.password !== password) {
+  if (!existingUser) {
+    const error = new HttpError(
+      "등록되지 않은 아이디이거나, 아이디 또는 비밀번호를 잘못 입력했습니다.",
+      401
+    );
+    return next(error);
+  }
+
+  // 사용자가 존재할 경우 비밀번호 확인
+  let isValidPassword = false;
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password);
+  } catch (err) {
+    const error = new HttpError(
+      "로그인에 실패했습니다. 다시 시도해주세요.",
+      500
+    );
+    return next(error);
+  }
+
+  // 비밀번호 올바르지 않음
+  if (!isValidPassword) {
     const error = new HttpError(
       "등록되지 않은 아이디이거나, 아이디 또는 비밀번호를 잘못 입력했습니다.",
       401
@@ -71,7 +102,6 @@ const login = async (req, res, next) => {
     message: "로그인에 성공했습니다.",
     user: existingUser.toObject({ getters: true }),
   });
-
 };
 
 exports.signup = signup;
