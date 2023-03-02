@@ -87,7 +87,7 @@ const login = async (req, res, next) => {
   if (!existingUser) {
     const error = new HttpError(
       "등록되지 않은 아이디이거나, 아이디 또는 비밀번호를 잘못 입력했습니다.",
-      401
+      403
     );
     return next(error);
   }
@@ -108,7 +108,7 @@ const login = async (req, res, next) => {
   if (!isValidPassword) {
     const error = new HttpError(
       "등록되지 않은 아이디이거나, 아이디 또는 비밀번호를 잘못 입력했습니다.",
-      401
+      403
     );
     return next(error);
   }
