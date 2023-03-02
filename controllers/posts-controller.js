@@ -8,7 +8,10 @@ const User = require("../models/user");
 const getPost = async (req, res, next) => {
   let posts;
   try {
-    posts = await Post.find({}, 'title author createDate').populate('author','name');
+    posts = await Post.find({}, "title author createDate").populate(
+      "author",
+      "name"
+    );
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
@@ -25,7 +28,10 @@ const getPostById = async (req, res, next) => {
 
   let post;
   try {
-    post = await Post.find({postId} ,"title author createDate content").populate('author','name');
+    post = await Post.find(
+      { postId },
+      "title author createDate content"
+    ).populate("author", "name");
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
@@ -53,7 +59,7 @@ const createPost = async (req, res, next) => {
   const createdPost = new Post({
     title,
     author,
-    content
+    content,
   });
 
   let user;
@@ -64,17 +70,17 @@ const createPost = async (req, res, next) => {
     return next(error);
   }
 
-  if(!user) {
+  if (!user) {
     const error = new HttpError("해당 사용자를 찾을 수 없습니다.", 404);
     return next(error);
   }
 
   try {
     const session = await mongoose.startSession();
-    
+
     session.startTransaction();
     await createdPost.save({ session: session });
-    
+
     user.posts.push(createdPost);
     await user.save({ session: session });
 
@@ -108,6 +114,11 @@ const updatePost = async (req, res, next) => {
     return next(error);
   }
 
+  if (updatedpost.author.toString() !== req.userData.userId) {
+    const error = new HttpError("수정할 수 없습니다.", 401);
+    return next(error);
+  }
+
   updatedpost.title = title;
   updatedpost.content = content;
 
@@ -126,7 +137,7 @@ const deletePost = async (req, res, next) => {
 
   let deletedPost;
   try {
-    deletedPost = await Post.findById(postId).populate('author');
+    deletedPost = await Post.findById(postId).populate("author");
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 삭제할 수 없습니다.",
@@ -135,20 +146,22 @@ const deletePost = async (req, res, next) => {
     return next(error);
   }
 
-  if(!deletedPost) {
-    const error = new HttpError(
-      "해당 게시글이 없습니다.",
-      404
-    );
+  if (!deletedPost) {
+    const error = new HttpError("해당 게시글이 없습니다.", 404);
+    return next(error);
+  }
+
+  if (deletedPost.author.id !== req.userData.userId) {
+    const error = new HttpError("삭제할 수 없습니다.", 401);
     return next(error);
   }
 
   try {
     const session = await mongoose.startSession();
-    
+
     session.startTransaction();
     await deletedPost.remove({ session: session });
-    
+
     deletedPost.author.posts.pull(deletedPost);
     await deletedPost.author.save({ session: session });
 
