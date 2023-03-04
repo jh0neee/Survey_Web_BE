@@ -29,6 +29,6 @@ router.patch(
 );
 
 // post id로 게시글 삭제
-router.delete("/:pid", postsControllers.deledeletePost);
+router.delete("/:pid", postsControllers.deletePost);
 
 module.exports = router;

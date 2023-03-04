@@ -178,4 +178,4 @@ exports.getPost = getPost;
 exports.getPostById = getPostById;
 exports.createPost = createPost;
 exports.updatePost = updatePost;
-exports.deledeletePost = deletePost;
+exports.deletePost = deletePost;
