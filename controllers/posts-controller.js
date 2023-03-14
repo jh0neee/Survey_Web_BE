@@ -6,6 +6,9 @@ const Post = require("../models/post");
 const User = require("../models/user");
 
 const getPost = async (req, res, next) => {
+  let offset = req.query.offset ? parseInt(req.query.offset) : 0;
+  let limit = req.query.limit ? parseInt(req.query.limit) : 5;
+
   let posts;
   try {
     posts = await Post.find({}, "title author createDate").populate(
@@ -20,7 +23,9 @@ const getPost = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ posts: posts.map((post) => post.toObject({ getters: true })) });
+  posts = posts.map((post) => post.toObject({ getters: true }));
+
+  res.json({ total: posts.length, cuttedData: posts.slice(offset, offset+limit) });
 };
 
 const getPostById = async (req, res, next) => {
