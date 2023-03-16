@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const postsRouter = require("./routes/posts-routes");
 const usersRouter = require("./routes/users-routes");
+const surveyRouter = require("./routes/survey-routes");
 const HttpError = require("./models/http-error");
 
 mongoose.set("strictQuery", true);
@@ -28,6 +29,7 @@ app.use(cors());
 
 app.use("/api/posts", postsRouter);
 app.use("/api/user", usersRouter);
+app.use("/api/survey", surveyRouter);
 
 // 지원되지 않은 routes에 대한 오류처리
 app.use((req, res, next) => {
