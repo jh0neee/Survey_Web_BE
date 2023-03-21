@@ -1,3 +1,6 @@
+require("dotenv").config();
+const { JWT_KEY } = process.env;
+
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -56,7 +59,7 @@ const signup = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: createdUser.id, email: createdUser.email },
-      "jwt_secret",
+      JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {
@@ -117,7 +120,7 @@ const login = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: existingUser.id, email: existingUser.email },
-      "jwt_secret",
+      JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {
