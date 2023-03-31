@@ -65,6 +65,7 @@ const createPost = async (req, res, next) => {
     title,
     author,
     content,
+    surveys: []
   });
 
   let user;
