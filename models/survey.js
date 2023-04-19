@@ -6,10 +6,14 @@ const Option = new Schema({
   value: String,
 });
 
-const surveySchema = new Schema({
+const QuestionsItem = new Schema({
   question: { type: String, required: true },
   options: [Option],
-  postCreator: { type: mongoose.Types.ObjectId, required: true, ref: 'Post' },
+});
+
+const surveySchema = new Schema({
+  questions: [QuestionsItem],
+  postCreator: { type: mongoose.Types.ObjectId, required: true, ref: "Post" },
 });
 
 module.exports = mongoose.model("Survey", surveySchema);

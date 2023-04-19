@@ -7,12 +7,13 @@ const Post = require("../models/post");
 // 게시글 id로 특정 설문지 가져오기
 const getSurvey = async (req, res, next) => {
   const postId = req.params.pid;
-  console.log(postId);
   let surveys;
 
   try {
-    surveys = await Survey.find({ postCreator: postId }, "question options");
-    console.log(surveys);
+    surveys = await Survey.find(
+      { postCreator: postId },
+      "questions postCreator"
+    );
   } catch (err) {
     const error = new HttpError("설문지를 가져오는데 실패했습니다.", 500);
     return next(error);
@@ -32,15 +33,13 @@ const createSurvey = async (req, res, next) => {
   // 요청 객체를 살펴본 후 벗어나는 유효성 오류가 없는지 점검함
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors);
     throw new HttpError("유효하지 않은 입력 데이터를 전달했습니다", 422);
   }
 
-  const { question, options, postCreator } = req.body;
+  const { questions, postCreator } = req.body;
 
   const createdSurvey = new Survey({
-    question,
-    options,
+    questions,
     postCreator,
   });
 
@@ -60,19 +59,16 @@ const createSurvey = async (req, res, next) => {
     return next(error);
   }
 
-  console.log(post);
-
   try {
     const session = await mongoose.startSession();
 
     session.startTransaction();
     await createdSurvey.save({ session: session });
-    
+
     post.surveys.push(createdSurvey);
     await post.save({ session: session });
-    
-    await session.commitTransaction();
 
+    await session.commitTransaction();
   } catch (err) {
     const error = new HttpError("설문 생성에 실패했습니다.", 500);
     return next(error);

@@ -1,5 +1,4 @@
 const express = require("express");
-const { check } = require("express-validator");
 
 const surveyControllers = require("../controllers/survey-controller");
 
@@ -9,10 +8,6 @@ const router = express.Router();
 router.get("/:pid", surveyControllers.getSurvey);
 
 // 새로운 설문지 생성
-router.post(
-  "/",
-  [check("question").not().isEmpty(), check("options").not().isEmpty()],
-  surveyControllers.createSurvey
-);
+router.post("/", surveyControllers.createSurvey);
 
 module.exports = router;
