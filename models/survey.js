@@ -8,6 +8,7 @@ const Option = new Schema({
 
 const QuestionsItem = new Schema({
   question: { type: String, required: true },
+  selectOption: { type: String, required: true },
   options: [Option],
 });
 
