@@ -77,5 +77,49 @@ const createSurvey = async (req, res, next) => {
   res.status(201).json({ survey: createdSurvey });
 };
 
+const createAnswers = async (req, res, next) => {
+  const { surveyId } = req.params;
+  const { answers } = req.body;
+
+  const survey = await Survey.findById(surveyId);
+
+  if (!survey) {
+    throw new HttpError("설문을 찾을 수 없습니다.", 404);
+  }
+
+  try {
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    for (const questionId in answers) {
+      const userAnswer = answers[questionId];
+      const existingAnswer = survey.answers.find(
+        (a) => a.questionId === questionId
+      );
+
+      if (existingAnswer) {
+        if (Array.isArray(userAnswer)) {
+          existingAnswer.responses.push(...userAnswer);
+        } else {
+          existingAnswer.responses.push(userAnswer);
+        }
+      } else {
+        survey.answers.push({ questionId, answers: [userAnswer] });
+      }
+    }
+
+    await survey.save({ session: session });
+
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError("답변 추가에 실패했습니다.", 500);
+    return next(error);
+  }
+
+  res.status(201).json({ message: "답변이 추가되었습니다." });
+};
+
 exports.getSurvey = getSurvey;
 exports.createSurvey = createSurvey;
+exports.createAnswers = createAnswers;

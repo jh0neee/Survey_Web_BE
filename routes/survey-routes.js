@@ -10,4 +10,7 @@ router.get("/:pid", surveyControllers.getSurvey);
 // 새로운 설문지 생성
 router.post("/", surveyControllers.createSurvey);
 
+// 설문 답변 생성(저장)
+router.post("/:surveyId/answers", surveyControllers.createAnswers);
+
 module.exports = router;

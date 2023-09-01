@@ -12,9 +12,15 @@ const QuestionsItem = new Schema({
   options: [Option],
 });
 
+const AnswerSchema = new Schema({
+  questionId: String,
+  responses: [String],
+});
+
 const surveySchema = new Schema({
   questions: [QuestionsItem],
   postCreator: { type: mongoose.Types.ObjectId, required: true, ref: "Post" },
+  answers: [AnswerSchema],
 });
 
 module.exports = mongoose.model("Survey", surveySchema);
