@@ -12,7 +12,7 @@ const getSurvey = async (req, res, next) => {
   try {
     surveys = await Survey.find(
       { postCreator: postId },
-      "questions postCreator"
+      "questions postCreator answers"
     );
   } catch (err) {
     const error = new HttpError("설문지를 가져오는데 실패했습니다.", 500);
