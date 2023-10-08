@@ -25,7 +25,10 @@ const getPost = async (req, res, next) => {
 
   posts = posts.map((post) => post.toObject({ getters: true }));
 
-  res.json({ total: posts.length, cuttedData: posts.slice(offset, offset+limit) });
+  res.json({
+    total: posts.length,
+    cuttedData: posts.slice(offset, offset + limit),
+  });
 };
 
 const getPostById = async (req, res, next) => {
@@ -35,8 +38,10 @@ const getPostById = async (req, res, next) => {
   try {
     post = await Post.find(
       { postId },
-      "title author createDate content"
-    ).populate("author", "name");
+      "title author createDate content surveys"
+    )
+      .populate("author", "name")
+      .populate("surveys", "questions");
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
@@ -44,6 +49,8 @@ const getPostById = async (req, res, next) => {
     );
     return next(error);
   }
+
+  console.log(post);
 
   if (!post) {
     const error = new HttpError("해당 게시물을 찾지 못했습니다.", 404);
@@ -65,7 +72,7 @@ const createPost = async (req, res, next) => {
     title,
     author,
     content,
-    surveys: []
+    surveys: [],
   });
 
   let user;
