@@ -41,7 +41,7 @@ const getPostById = async (req, res, next) => {
       "title author createDate content surveys"
     )
       .populate("author", "name")
-      .populate("surveys", "questions");
+      .populate("surveys", "questions answers");
   } catch (err) {
     const error = new HttpError(
       "오류가 발생했습니다. 게시글을 찾을 수 없습니다.",
