@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { PORT, MONGO_URL } = process.env;
+const { PORT, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -14,7 +14,9 @@ const HttpError = require("./models/http-error");
 mongoose.set("strictQuery", true);
 
 mongoose
-  .connect(MONGO_URL)
+  .connect(
+    `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ohijzct.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
+  )
   .then(() => app.listen(PORT))
   .catch((err) => console.log(err));
 
