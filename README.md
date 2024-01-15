@@ -18,6 +18,7 @@ Config : `npm`
 Development : `JavaScript`, `React`, `Node.js`, `Express.js`, `MongoDB`
 
 ## 프로젝트 구조
+```
 📦BACKEND
  ┣ 📂controllers
  ┃ ┣ 📜posts-controller.js
@@ -39,3 +40,4 @@ Development : `JavaScript`, `React`, `Node.js`, `Express.js`, `MongoDB`
  ┣ 📜nodemon.json
  ┣ 📜package-lock.json
  ┗ 📜package.json
+```
