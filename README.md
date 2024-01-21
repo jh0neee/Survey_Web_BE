@@ -41,3 +41,5 @@ Development : `JavaScript`, `React`, `Node.js`, `Express.js`, `MongoDB`
  ┣ 📜package-lock.json
  ┗ 📜package.json
 ```
+
+<h3>:page_facing_up: <a href="https://drive.google.com/file/d/1MvbYzE_tvXNm4z-wa0dWQPSNj-Lo1dQC/view?usp=drive_link)https://drive.google.com/file/d/1MvbYzE_tvXNm4z-wa0dWQPSNj-Lo1dQC/view?usp=drive_link">자세히 보기</a></h3>
